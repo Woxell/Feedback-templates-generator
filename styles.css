@@ -74,6 +74,10 @@ textarea:focus {
     border: 1px solid #ddd;
     min-height: 300px;
     line-height: 1.6;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     margin-bottom: 1rem;
 }
 
