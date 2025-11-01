@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    height: 100vh;
+    display: flex;
+    background: #f5f5f5;
+}
+
+.left-panel {
+    width: 50%;
+    padding: 2rem;
+    background: white;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+}
+
+.right-panel {
+    width: 50%;
+    padding: 2rem;
+    background: #fafafa;
+    overflow-y: auto;
+    position: relative;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+select,
+input,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.output-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    min-height: 300px;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.output-bold {
+    font-weight: bold;
+}
+
+.output-static {
+    font-style: italic;
+}
+
+.output-dynamic {
+    font-style: normal;
+}
+
+.copy-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.copy-btn:hover {
+    background: #45a049;
+}
+
+.copy-btn:active {
+    transform: scale(0.98);
+}
+
+.copy-feedback {
+    display: inline-block;
+    margin-left: 1rem;
+    color: #4CAF50;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.copy-feedback.show {
+    opacity: 1;
+}
+
+.required {
+    color: #d32f2f;
+}

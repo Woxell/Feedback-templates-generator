@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Feedback Template Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="left-panel">
+        <h1>Feedback Template Generator</h1>
+        
+        <div class="form-group">
+            <label for="language">Language</label>
+            <select id="language">
+                <option value="sv">Svenska</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category">
+                <option value="resubmission">Written resubmission</option>
+                <option value="failed">New retake / failed written resubmission</option>
+                <option value="passed">Passed submission</option>
+            </select>
+        </div>
+        
+        <div id="dynamic-fields"></div>
+    </div>
+    
+    <div class="right-panel">
+        <h1>Generated Feedback</h1>
+        <div class="output-container" id="output"></div>
+        <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+        <span class="copy-feedback" id="copyFeedback">Copied!</span>
+    </div>
+</body>
+</html>
