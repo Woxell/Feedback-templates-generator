@@ -1,6 +1,6 @@
 const translations = {
     en: {
-        title: 'Feedback Template Generator',
+        title: '⬤OP Feedback',
         generatedFeedback: 'Generated Feedback',
         copyButton: 'Copy to Clipboard',
         copied: 'Copied!',
@@ -11,10 +11,21 @@ const translations = {
             resubmission: 'Written resubmission',
             failed: 'New retake / failed written resubmission',
             passed: 'Passed'
+        },
+        infoBox: {
+            heading: 'General information regarding written resubmission / retake:',
+            showMore: 'Show more',
+            showLess: 'Show less',
+            items: [
+                'Always set the grade U on the current submission (the one that was presented). Make sure the grade is actually set.',
+                'It is okay if feedback is written at a later time (preferably within 1-2 working days). This is good if you are not 100% sure whether it should be a written resubmission or a new oral presentation and want to discuss with a teacher.',
+                'If the student wants their resubmission to be reviewed faster, ask the student to email you stating their name and group number if applicable. We recommend using Canvas for these emails to avoid your emails being spread if you are not comfortable with that (however, you need to keep track of Canvas messages as it is not always easy to see messages from there, they can end up in spam, etc.).',
+                'If there are questions about the templates below, ask course teachers.'
+            ]
         }
     },
     sv: {
-        title: 'Generator för feedbackmallar',
+        title: '⬤OP Feedback',
         generatedFeedback: 'Genererad feedback',
         copyButton: 'Kopiera till urklipp',
         copied: 'Kopierat!',
@@ -25,6 +36,17 @@ const translations = {
             resubmission: 'Skriftlig komplettering',
             failed: 'Ny omtentamen / underkänd skriftlig komplettering',
             passed: 'Godkänd inlämning'
+        },
+        infoBox: {
+            heading: 'Generellt angående skriftlig komplettering / ny muntlig redovisning:',
+            showMore: 'Visa mer',
+            showLess: 'Visa mindre',
+            items: [
+                'Sätt alltid betyget U på den nuvarande inlämningen (den som redovisades). Var säker på att betyget verkligen sätts.',
+                'Det är OK om feedback skrivs vid ett senare tillfälle (dock gärna inom 1-2 arbetsdagar). Detta är bra om ni inte är 100% säkra om det ska vara en skriftlig komplettering eller om det ska vara en ny muntlig omredovisning och vill diskutera med lärare.',
+                'Om studenten vill att deras komplettering ska granskas snabbare, be studenten att maila er där studenten anger namn och ev. gruppnummer. Rekommenderar att ni använder Canvas vid dessa mail för att undvika att era mail sprids om ni inte är bekväma med det (dock får ni håll koll på Canvasmeddelanden för det är inte alltid lätt att se meddelanden därifrån, kan hamna i skräppost etc.).',
+                'Om det finns frågor om mallarna nedan fråga kursansvariga.'
+            ]
         }
     }
 };
@@ -169,6 +191,22 @@ function updateUILanguage() {
 
     document.querySelector('label[for="language"]').textContent = t.language;
     document.querySelector('label[for="category"]').textContent = t.category;
+
+    // Update info box content
+    document.getElementById('info-heading').textContent = t.infoBox.heading;
+    document.getElementById('info-item-1').textContent = t.infoBox.items[0];
+    document.getElementById('info-item-2').textContent = t.infoBox.items[1];
+    document.getElementById('info-item-3').textContent = t.infoBox.items[2];
+    document.getElementById('info-item-4').textContent = t.infoBox.items[3];
+    
+    // Update toggle text based on current state
+    const infoList = document.getElementById('info-list');
+    const infoToggle = document.getElementById('info-toggle');
+    if (infoList.classList.contains('collapsed')) {
+        infoToggle.textContent = t.infoBox.showMore;
+    } else {
+        infoToggle.textContent = t.infoBox.showLess;
+    }
 
     const categorySelect = document.getElementById('category');
     const currentCategory = categorySelect.value;
@@ -413,8 +451,10 @@ document.getElementById('copyBtn').addEventListener('click', () => {
             feedback.classList.add('show');
             setTimeout(() => {
                 feedback.classList.remove('show');
-                // Reset to original text after hiding
-                feedback.textContent = translations[lang].copied;
+                // Reset to original text after fade-out completes (300ms transition)
+                setTimeout(() => {
+                    feedback.textContent = translations[lang].copied;
+                }, 300);
             }, 2000);
             return;
         }
@@ -486,6 +526,22 @@ document.getElementById('copyBtn').addEventListener('click', () => {
             setTimeout(() => feedback.classList.remove('show'), 2000);
         });
     });
+});
+
+// Info box toggle functionality
+document.getElementById('info-box-header').addEventListener('click', () => {
+    const infoList = document.getElementById('info-list');
+    const infoToggle = document.getElementById('info-toggle');
+    const lang = document.getElementById('language').value;
+    const t = translations[lang];
+    
+    infoList.classList.toggle('collapsed');
+    
+    if (infoList.classList.contains('collapsed')) {
+        infoToggle.textContent = t.infoBox.showMore;
+    } else {
+        infoToggle.textContent = t.infoBox.showLess;
+    }
 });
 
 updateUILanguage();

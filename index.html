@@ -5,14 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OOP Feedback</title>
+    <title>⬤OP Feedback</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <div class="left-panel">
-        <h1>Feedback Template Generator</h1>
-        
+        <h1></h1>
+        <br>
         <div class="form-group">
             <label for="language"></label>
             <select id="language">
@@ -34,10 +34,26 @@
     </div>
     
     <div class="right-panel">
-        <h1></h1>
+        <div class="info-box">
+            <div class="info-box-header" id="info-box-header">
+                <strong id="info-heading"></strong>
+                <span class="info-toggle" id="info-toggle"></span>
+            </div>
+            <ul id="info-list" class="info-list collapsed">
+                <li id="info-item-1"></li>
+                <li id="info-item-2"></li>
+                <li id="info-item-3"></li>
+                <li id="info-item-4"></li>
+            </ul>
+        </div>
+        <div class="output-header">
+            <h1></h1>
+            <div class="button-group">
+                <button class="copy-btn" id="copyBtn"></button>
+                <span class="copy-feedback" id="copyFeedback"></span>
+            </div>
+        </div>
         <div class="output-container" id="output"></div>
-        <button class="copy-btn" id="copyBtn"></button>
-        <span class="copy-feedback" id="copyFeedback"></span>
     </div>
 </body>
 </html>
