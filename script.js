@@ -227,7 +227,6 @@ function updateUILanguage() {
     });
 
     categorySelect.value = currentCategory;
-    renderFields(); // quickfix
 }
 
 function renderFields() {
@@ -274,9 +273,17 @@ function renderFields() {
         if (field.id === 'deadline' && !fieldValues[field.id]) {
             input.value = getDefaultDeadline();
             fieldValues[field.id] = input.value;
-        } else if (field.type === 'select' && !fieldValues[field.id]) {
-            input.value = field.options[0];
-            fieldValues[field.id] = input.value;
+        } else if (field.type === 'select') {
+            // Check if the saved value exists in the current options
+            const savedValue = fieldValues[field.id];
+            const valueExists = savedValue && field.options.includes(savedValue);
+            
+            if (valueExists) {
+                input.value = savedValue;
+            } else {
+                input.value = field.options[0];
+                fieldValues[field.id] = input.value;
+            }
         } else {
             input.value = fieldValues[field.id] || '';
         }
