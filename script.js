@@ -9,7 +9,7 @@ const translations = {
         category: 'Assessment',
         categories: {
             resubmission: 'Written resubmission',
-            failed: 'New retake / failed written resubmission',
+            failed: 'New presentation / failed written resubmission',
             passed: 'Passed'
         },
         infoBox: {
@@ -34,7 +34,7 @@ const translations = {
         category: 'Bedömning',
         categories: {
             resubmission: 'Skriftlig komplettering',
-            failed: 'Ny omtentamen / underkänd skriftlig komplettering',
+            failed: 'Ny muntlig redovisning / underkänd skriftlig komplettering',
             passed: 'Godkänd inlämning'
         },
         infoBox: {
