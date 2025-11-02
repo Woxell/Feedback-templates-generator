@@ -5,6 +5,8 @@ const translations = {
         copyButton: 'Copy to Clipboard',
         copied: 'Copied!',
         copiedError: 'No comments! Nothing copied.',
+        feedbackTypeError: 'Please choose feedback context!',
+        feedbackTypePlaceholder: '[Please choose feedback context]',
         language: 'Language',
         category: 'Assessment',
         categories: {
@@ -30,6 +32,8 @@ const translations = {
         copyButton: 'Kopiera till urklipp',
         copied: 'Kopierat!',
         copiedError: 'Inga kommentarer! Inget är kopierat.',
+        feedbackTypeError: 'Var god välj sammanhang till feedback!',
+        feedbackTypePlaceholder: '[Var god välj sammanhang till feedback]',
         language: 'Språk',
         category: 'Bedömning',
         categories: {
@@ -54,7 +58,8 @@ const translations = {
 const templates = {
     en: {
         resubmission: {
-            text: `Assessment: Written Resubmission
+            text: 
+`Assessment: Written Resubmission
 Deadline for resubmission: {deadline}
 
 To achieve a passing grade, you need to submit a resubmission that includes: 
@@ -75,7 +80,8 @@ The resubmission must be submitted no later than two working days after you comp
             ]
         },
         failed: {
-            text: `Assessment: Resit – New oral presentation required
+            text:
+`Assessment: Resit – New oral presentation required
 For dates regarding resit opportunities, please refer to the assignment instructions, course schedule, or announcements on Canvas.
 
 Things to consider before the resit and previously identified corrections: 
@@ -90,7 +96,7 @@ The list of resubmissions above only includes the issues identified during the {
 
 It is important to come well prepared for the oral presentation. This does not only mean that the submission is completed and a time has been booked, but also that you have reviewed and rehearsed your submission so that the presentation goes as smoothly as possible. It is common to feel stressed during an oral presentation, but by preparing and practicing your submission, you can reduce this stress.`,
             fields: [
-                { id: 'feedbackType', label: 'Feedback After', type: 'select', options: ['oral presentation', 'review of the resubmission']},
+                { id: 'feedbackType', label: 'Feedback after...', type: 'select', options: [translations.en.feedbackTypePlaceholder, 'oral presentation', 'review of the resubmission'], required: true},
                 { id: 'codeComments', label: 'Code Comments', type: 'textarea'},
                 { id: 'diagramComments', label: 'Diagram Comments', type: 'textarea'},
                 { id: 'reportComments', label: 'Report Comments', type: 'textarea'}
@@ -103,7 +109,8 @@ It is important to come well prepared for the oral presentation. This does not o
     },
     sv: {
         resubmission: {
-            text: `Bedömning: Skriftlig komplettering
+            text: 
+`Bedömning: Skriftlig komplettering
 Deadline för komplettering: {deadline}
 
 För godkänt betyg behöver du lämna in en komplettering innehållande:
@@ -125,7 +132,8 @@ Kompletteringen måste lämnas in senast två arbetsdagar efter att du genomför
             ]
         },
         failed: {
-            text: `Bedömning: Omredovisning, ny muntlig redovisning krävs.
+            text:
+`Bedömning: Omredovisning, ny muntlig redovisning krävs.
 För att se datum angående omtillfälle se inlämningsuppgifts instruktioner, kursschema eller anslag på canvas.
 
 Vad som behöver tänkas på inför omtillfället samt redan upphittade kompletteringar:
@@ -140,7 +148,7 @@ Listan ovan av kompletteringar är endast de kompletteringar som hittades under 
 Det är viktigt att komma väl förbered till den muntliga redovisningen. Detta gäller inte bara att inlämningen är gjort och att en tid bokad är bokad, utan det är mycket viktigt att repetera och granska inlämningen så att redovisningen går så smidigt som möjligt. Det är vanligt att det kan bli stressigt under en muntlig redovisning, men genom att förbereda sig och öva på sin inlämning kommer att minska på stressen.
 `,
             fields: [
-                { id: 'feedbackType', label: 'Feedback efter', type: 'select', options: ['den muntliga redovisningen', 'granskning av komplettering']},
+                { id: 'feedbackType', label: 'Feedback efter...', type: 'select', options: [translations.sv.feedbackTypePlaceholder, 'den muntliga redovisningen', 'granskning av komplettering'], required: true},
                 { id: 'codeComments', label: 'Kommentarer om kod', type: 'textarea'},
                 { id: 'diagramComments', label: 'Kommentarer om diagram', type: 'textarea'},
                 { id: 'reportComments', label: 'Kommentarer om rapport', type: 'textarea'}
@@ -167,7 +175,6 @@ function addWeekdays(date, days) {
             addedDays++;
         }
     }
-
     return result;
 }
 
@@ -220,6 +227,7 @@ function updateUILanguage() {
     });
 
     categorySelect.value = currentCategory;
+    renderFields(); // quickfix
 }
 
 function renderFields() {
@@ -267,7 +275,6 @@ function renderFields() {
             input.value = getDefaultDeadline();
             fieldValues[field.id] = input.value;
         } else if (field.type === 'select' && !fieldValues[field.id]) {
-            // For select elements, default to first option
             input.value = field.options[0];
             fieldValues[field.id] = input.value;
         } else {
@@ -296,28 +303,22 @@ function updateOutput() {
         if (input) {
             fieldValues[field.id] = input.value;
             let value = input.value || `[${field.label}]`;
-
-            // Check if this is one of the comment fields and if it's empty
             const isCommentField = ['codeComments', 'diagramComments', 'reportComments'].includes(field.id);
 
             if (isCommentField && !input.value.trim()) {
-                // Remove the placeholder line entirely if the comment field is empty
                 const lines = output.split('\n');
                 const filteredLines = lines.filter(line => !line.includes(`{${field.id}}`));
                 output = filteredLines.join('\n');
             } else if (isCommentField) {
-                //Append Code:, Diagram:, or Report: before comments if language is English, Swedish otherwise
                 let prefix = lang === 'en' ?
                     (field.id === 'codeComments' ? 'Code:' : field.id === 'diagramComments' ? 'Diagram:' : 'Report:') : 
                     (field.id === 'codeComments' ? 'Kod:' : field.id === 'diagramComments' ? 'Diagram:' : 'Rapport:');
                 
-                // Split the input by lines and add bullet points to each line
                 const commentLines = value.split('\n').filter(line => line.trim() !== '');
                 const bulletPoints = commentLines.map(line => `###DYNAMIC###• ${line.trim()}###ENDDYNAMIC###`).join('\n');
                 
                 output = output.replace(`{${field.id}}`, `${prefix}\n${bulletPoints}`);
             } else {
-                // Append time to deadline field
                 if (field.id === 'deadline' && input.value) {
                     value = input.value + ', kl. 23:59';
                 }
@@ -435,6 +436,24 @@ document.getElementById('language').addEventListener('change', () => {
 document.getElementById('category').addEventListener('change', renderFields);
 
 document.getElementById('copyBtn').addEventListener('click', () => {
+    const lang = document.getElementById('language').value;
+    
+    // Check if feedbackType field exists and hasn't been selected
+    const feedbackTypeField = document.getElementById('feedbackType');
+    if (feedbackTypeField && feedbackTypeField.value === translations[lang].feedbackTypePlaceholder) {
+        const feedback = document.getElementById('copyFeedback');
+        feedback.textContent = translations[lang].feedbackTypeError;
+        feedback.classList.add('show');
+        setTimeout(() => {
+            feedback.classList.remove('show');
+            // Reset to original text after fade-out completes (300ms transition)
+            setTimeout(() => {
+                feedback.textContent = translations[lang].copied;
+            }, 300);
+        }, 2000);
+        return;
+    }
+    
     //Alert and return if all comment fields are empty when they are present
     const codeCommentsField = document.getElementById('codeComments');
     const diagramCommentsField = document.getElementById('diagramComments');
@@ -446,7 +465,6 @@ document.getElementById('copyBtn').addEventListener('click', () => {
             diagramCommentsField.value.trim() === '' &&
             reportCommentsField.value.trim() === '') {
             const feedback = document.getElementById('copyFeedback');
-            const lang = document.getElementById('language').value;
             feedback.textContent = translations[lang].copiedError;
             feedback.classList.add('show');
             setTimeout(() => {
