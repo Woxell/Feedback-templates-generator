@@ -1,6 +1,6 @@
 const translations = {
     en: {
-        title: '⬤OP Feedback',
+        title: '⬤OP Feedback.',
         generatedFeedback: 'Generated Feedback',
         copyButton: 'Copy to Clipboard',
         copied: 'Copied!',
@@ -27,7 +27,7 @@ const translations = {
         }
     },
     sv: {
-        title: '⬤OP Feedback',
+        title: '⬤OP Feedback.',
         generatedFeedback: 'Genererad feedback',
         copyButton: 'Kopiera till urklipp',
         copied: 'Kopierat!',
@@ -48,7 +48,7 @@ const translations = {
             items: [
                 'Sätt alltid betyget U på den nuvarande inlämningen (den som redovisades). Var säker på att betyget verkligen sätts.',
                 'Det är OK om feedback skrivs vid ett senare tillfälle (dock gärna inom 1-2 arbetsdagar). Detta är bra om ni inte är 100% säkra om det ska vara en skriftlig komplettering eller om det ska vara en ny muntlig omredovisning och vill diskutera med lärare.',
-                'Om studenten vill att deras komplettering ska granskas snabbare, be studenten att maila er där studenten anger namn och ev. gruppnummer. Rekommenderar att ni använder Canvas vid dessa mail för att undvika att era mail sprids om ni inte är bekväma med det (dock får ni håll koll på Canvasmeddelanden för det är inte alltid lätt att se meddelanden därifrån, kan hamna i skräppost etc.).',
+                'Om studenten vill att deras komplettering ska granskas snabbare, be studenten att maila er där studenten anger namn och ev. gruppnummer. Vi rekommenderar att ni använder Canvas vid dessa mail för att undvika att era mail sprids om ni inte är bekväma med det (dock får ni hålla koll på Canvasmeddelanden för det är inte alltid lätt att se meddelanden därifrån, notiser kan hamna i skräppost etc.).',
                 'Om det finns frågor om mallarna nedan fråga kursansvariga.'
             ]
         }
@@ -58,15 +58,17 @@ const translations = {
 const templates = {
     en: {
         resubmission: {
-            text: 
-`Assessment: Written Resubmission
+            text:
+                `Assessment: Written Resubmission
 Deadline for resubmission: {deadline}
 
 To achieve a passing grade, you need to submit a resubmission that includes: 
 All files that are part of the assignment must be resubmitted together in the same submission (even if only one file has been changed or supplemented).
 
 {codeComments}
+
 {diagramComments}
+
 {reportComments}
 
 The list of resubmissions above only includes the issues identified during the oral presentation. This does not mean there can’t be other things that also need to be corrected. New errors can occur when new code is implemented, so it is important to check and ensure that all requirements are included in the submission and that it has been properly tested.
@@ -74,14 +76,14 @@ The list of resubmissions above only includes the issues identified during the o
 The resubmission must be submitted no later than two working days after you completed your presentation or received feedback from the teacher/assistant. If you submit your resubmission later than this, you will need to book a new presentation time and redo the presentation at the next resit opportunity. If your resubmission cannot be approved, you will also need to book a new presentation time at the next resit opportunity. For dates regarding resit opportunities, please refer to the assignment instructions, course schedule, or announcements on Canvas.`,
             fields: [
                 { id: 'deadline', label: 'Deadline Date', type: 'date', required: true },
-                { id: 'codeComments', label: 'Code Comments', type: 'textarea'},
-                { id: 'diagramComments', label: 'Diagram Comments', type: 'textarea'},
-                { id: 'reportComments', label: 'Report Comments', type: 'textarea'}
+                { id: 'codeComments', label: 'Code Comments', type: 'textarea' },
+                { id: 'diagramComments', label: 'Diagram Comments', type: 'textarea' },
+                { id: 'reportComments', label: 'Report Comments', type: 'textarea' }
             ]
         },
         failed: {
             text:
-`Assessment: Resit – New oral presentation required
+                `Assessment: Resit – New oral presentation required
 For dates regarding resit opportunities, please refer to the assignment instructions, course schedule, or announcements on Canvas.
 
 Things to consider before the resit and previously identified corrections: 
@@ -89,17 +91,19 @@ Things to consider before the resit and previously identified corrections:
 All files that are part of the assignment must be resubmitted together in the same submission (even if only one file has been changed or supplemented).
 
 {codeComments}
+
 {diagramComments}
+
 {reportComments}
 
 The list of resubmissions above only includes the issues identified during the {feedbackType}. This does not mean there can’t be other things that also need to be corrected. New errors can occur when new code is implemented, so it is important to check and ensure that all requirements are included in the submission and that it has been properly tested.
 
 It is important to come well prepared for the oral presentation. This does not only mean that the submission is completed and a time has been booked, but also that you have reviewed and rehearsed your submission so that the presentation goes as smoothly as possible. It is common to feel stressed during an oral presentation, but by preparing and practicing your submission, you can reduce this stress.`,
             fields: [
-                { id: 'feedbackType', label: 'Feedback after...', type: 'select', options: [translations.en.feedbackTypePlaceholder, 'oral presentation', 'review of the resubmission'], required: true},
-                { id: 'codeComments', label: 'Code Comments', type: 'textarea'},
-                { id: 'diagramComments', label: 'Diagram Comments', type: 'textarea'},
-                { id: 'reportComments', label: 'Report Comments', type: 'textarea'}
+                { id: 'feedbackType', label: 'Feedback after...', type: 'select', options: [translations.en.feedbackTypePlaceholder, 'oral presentation', 'review of the resubmission'], required: true },
+                { id: 'codeComments', label: 'Code Comments', type: 'textarea' },
+                { id: 'diagramComments', label: 'Diagram Comments', type: 'textarea' },
+                { id: 'reportComments', label: 'Report Comments', type: 'textarea' }
             ]
         },
         passed: {
@@ -109,15 +113,17 @@ It is important to come well prepared for the oral presentation. This does not o
     },
     sv: {
         resubmission: {
-            text: 
-`Bedömning: Skriftlig komplettering
+            text:
+                `Bedömning: Skriftlig komplettering
 Deadline för komplettering: {deadline}
 
 För godkänt betyg behöver du lämna in en komplettering innehållande:
 Alla filer som ingår i inlämningsuppgiften måste lämnas in igen på samma inlämning (även om det endast är komplettering i en av filerna).
 
 {codeComments}
+
 {diagramComments}
+
 {reportComments}
 
 Listan ovan av kompletteringar är endast de kompletteringar som hittades under den muntliga redovisningen. Detta innebär inte att det inte kan finnas andra saker som kommer att behöva kompletteras. Det kan uppstå nya fel när ny kod implementeras så det är viktigt att kolla och säkerställa att alla krav finns med i inlämningen och att inlämningen testkörs.
@@ -126,21 +132,23 @@ Kompletteringen måste lämnas in senast två arbetsdagar efter att du genomför
 `,
             fields: [
                 { id: 'deadline', label: 'Deadline-datum', type: 'date', required: true },
-                { id: 'codeComments', label: 'Kommentarer om kod', type: 'textarea'},
-                { id: 'diagramComments', label: 'Kommentarer om diagram', type: 'textarea'},
-                { id: 'reportComments', label: 'Kommentarer om rapport', type: 'textarea'}
+                { id: 'codeComments', label: 'Kommentarer om kod', type: 'textarea' },
+                { id: 'diagramComments', label: 'Kommentarer om diagram', type: 'textarea' },
+                { id: 'reportComments', label: 'Kommentarer om rapport', type: 'textarea' }
             ]
         },
         failed: {
             text:
-`Bedömning: Omredovisning, ny muntlig redovisning krävs.
+                `Bedömning: Omredovisning, ny muntlig redovisning krävs.
 För att se datum angående omtillfälle se inlämningsuppgifts instruktioner, kursschema eller anslag på canvas.
 
 Vad som behöver tänkas på inför omtillfället samt redan upphittade kompletteringar:
 Alla filer som ingår i inlämningsuppgiften måste lämnas in igen på samma inlämning (även om det endast är komplettering i en av filerna).
 
 {codeComments}
+
 {diagramComments}
+
 {reportComments}
 
 Listan ovan av kompletteringar är endast de kompletteringar som hittades under {feedbackType}. Detta innebär inte att det inte kan finnas andra saker som kommer att behöva kompletteras. Det kan uppstå nya fel när ny kod implementeras så det är viktigt att kolla och säkerställa att alla krav finns med i inlämningen och att inlämningen testkörs.
@@ -148,10 +156,10 @@ Listan ovan av kompletteringar är endast de kompletteringar som hittades under 
 Det är viktigt att komma väl förbered till den muntliga redovisningen. Detta gäller inte bara att inlämningen är gjort och att en tid bokad är bokad, utan det är mycket viktigt att repetera och granska inlämningen så att redovisningen går så smidigt som möjligt. Det är vanligt att det kan bli stressigt under en muntlig redovisning, men genom att förbereda sig och öva på sin inlämning kommer att minska på stressen.
 `,
             fields: [
-                { id: 'feedbackType', label: 'Feedback efter...', type: 'select', options: [translations.sv.feedbackTypePlaceholder, 'den muntliga redovisningen', 'granskning av komplettering'], required: true},
-                { id: 'codeComments', label: 'Kommentarer om kod', type: 'textarea'},
-                { id: 'diagramComments', label: 'Kommentarer om diagram', type: 'textarea'},
-                { id: 'reportComments', label: 'Kommentarer om rapport', type: 'textarea'}
+                { id: 'feedbackType', label: 'Feedback efter...', type: 'select', options: [translations.sv.feedbackTypePlaceholder, 'den muntliga redovisningen', 'granskning av komplettering'], required: true },
+                { id: 'codeComments', label: 'Kommentarer om kod', type: 'textarea' },
+                { id: 'diagramComments', label: 'Kommentarer om diagram', type: 'textarea' },
+                { id: 'reportComments', label: 'Kommentarer om rapport', type: 'textarea' }
             ]
         },
         passed: {
@@ -205,7 +213,7 @@ function updateUILanguage() {
     document.getElementById('info-item-2').textContent = t.infoBox.items[1];
     document.getElementById('info-item-3').textContent = t.infoBox.items[2];
     document.getElementById('info-item-4').textContent = t.infoBox.items[3];
-    
+
     // Update toggle text based on current state
     const infoList = document.getElementById('info-list');
     const infoToggle = document.getElementById('info-toggle');
@@ -277,7 +285,7 @@ function renderFields() {
             // Check if the saved value exists in the current options
             const savedValue = fieldValues[field.id];
             const valueExists = savedValue && field.options.includes(savedValue);
-            
+
             if (valueExists) {
                 input.value = savedValue;
             } else {
@@ -318,12 +326,12 @@ function updateOutput() {
                 output = filteredLines.join('\n');
             } else if (isCommentField) {
                 let prefix = lang === 'en' ?
-                    (field.id === 'codeComments' ? 'Code:' : field.id === 'diagramComments' ? 'Diagram:' : 'Report:') : 
+                    (field.id === 'codeComments' ? 'Code:' : field.id === 'diagramComments' ? 'Diagram:' : 'Report:') :
                     (field.id === 'codeComments' ? 'Kod:' : field.id === 'diagramComments' ? 'Diagram:' : 'Rapport:');
-                
+
                 const commentLines = value.split('\n').filter(line => line.trim() !== '');
-                const bulletPoints = commentLines.map(line => `###DYNAMIC###• ${line.trim()}###ENDDYNAMIC###`).join('\n');
-                
+                const bulletPoints = commentLines.map(line => `###DYNAMIC###⁃  ${line.trim()}###ENDDYNAMIC###`).join('\n');
+
                 output = output.replace(`{${field.id}}`, `${prefix}\n${bulletPoints}`);
             } else {
                 if (field.id === 'deadline' && input.value) {
@@ -444,7 +452,7 @@ document.getElementById('category').addEventListener('change', renderFields);
 
 document.getElementById('copyBtn').addEventListener('click', () => {
     const lang = document.getElementById('language').value;
-    
+
     // Check if feedbackType field exists and hasn't been selected
     const feedbackTypeField = document.getElementById('feedbackType');
     if (feedbackTypeField && feedbackTypeField.value === translations[lang].feedbackTypePlaceholder) {
@@ -460,12 +468,12 @@ document.getElementById('copyBtn').addEventListener('click', () => {
         }, 2000);
         return;
     }
-    
+
     //Alert and return if all comment fields are empty when they are present
     const codeCommentsField = document.getElementById('codeComments');
     const diagramCommentsField = document.getElementById('diagramComments');
     const reportCommentsField = document.getElementById('reportComments');
-    
+
     // Check if comment fields exist (they won't exist for "passed" category)
     if (codeCommentsField && diagramCommentsField && reportCommentsField) {
         if (codeCommentsField.value.trim() === '' &&
@@ -559,9 +567,9 @@ document.getElementById('info-box-header').addEventListener('click', () => {
     const infoToggle = document.getElementById('info-toggle');
     const lang = document.getElementById('language').value;
     const t = translations[lang];
-    
+
     infoList.classList.toggle('collapsed');
-    
+
     if (infoList.classList.contains('collapsed')) {
         infoToggle.textContent = t.infoBox.showMore;
     } else {
