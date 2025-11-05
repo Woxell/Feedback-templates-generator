@@ -357,11 +357,12 @@ function updateOutput() {
         if (line.trim() === '') {
             lineDiv.innerHTML = '&nbsp;';
         } else {
-            // Check if line contains a colon
+            // Check if line contains a colon and is not a bullet point
             const colonIndex = line.indexOf(':');
+            const isBulletPoint = line.trim().startsWith('###DYNAMIC###⁃');
             let processedLine = line;
 
-            if (colonIndex !== -1) {
+            if (colonIndex !== -1 && !isBulletPoint) {
                 // Split at the first colon
                 const beforeColon = line.substring(0, colonIndex);
                 const afterColon = line.substring(colonIndex);
