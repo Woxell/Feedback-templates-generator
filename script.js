@@ -330,7 +330,7 @@ function updateOutput() {
                     (field.id === 'codeComments' ? 'Kod:' : field.id === 'diagramComments' ? 'Diagram:' : 'Rapport:');
 
                 const commentLines = value.split('\n').filter(line => line.trim() !== '');
-                const bulletPoints = commentLines.map(line => `###DYNAMIC###⁃  ${line.trim()}###ENDDYNAMIC###`).join('\n');
+                const bulletPoints = commentLines.map(line => `###LISTITEM###${line.trim()}###ENDLISTITEM###`).join('\n');
 
                 output = output.replace(`{${field.id}}`, `${prefix}\n${bulletPoints}`);
             } else {
@@ -352,17 +352,22 @@ function updateOutput() {
     outputContainer.innerHTML = '';
 
     lines.forEach((line) => {
-        const lineDiv = document.createElement('div');
+        // Check if this is a list item
+        const isListItem = line.includes('###LISTITEM###');
+        const lineElement = isListItem ? document.createElement('li') : document.createElement('div');
 
         if (line.trim() === '') {
-            lineDiv.innerHTML = '&nbsp;';
+            lineElement.innerHTML = '&nbsp;';
+        } else if (isListItem) {
+            // Process list item content - just use plain text, no special formatting
+            const content = line.replace(/###LISTITEM###/g, '').replace(/###ENDLISTITEM###/g, '');
+            lineElement.textContent = content;
         } else {
-            // Check if line contains a colon and is not a bullet point
+            // Check if line contains a colon
             const colonIndex = line.indexOf(':');
-            const isBulletPoint = line.trim().startsWith('###DYNAMIC###⁃');
             let processedLine = line;
 
-            if (colonIndex !== -1 && !isBulletPoint) {
+            if (colonIndex !== -1) {
                 // Split at the first colon
                 const beforeColon = line.substring(0, colonIndex);
                 const afterColon = line.substring(colonIndex);
@@ -375,19 +380,19 @@ function updateOutput() {
                         const dynamicSpan = document.createElement('span');
                         dynamicSpan.className = 'output-dynamic output-bold';
                         dynamicSpan.textContent = dynamic;
-                        lineDiv.appendChild(dynamicSpan);
+                        lineElement.appendChild(dynamicSpan);
 
                         if (rest.join('###ENDDYNAMIC###')) {
                             const staticSpan = document.createElement('span');
                             staticSpan.className = 'output-static output-bold';
                             staticSpan.textContent = rest.join('###ENDDYNAMIC###');
-                            lineDiv.appendChild(staticSpan);
+                            lineElement.appendChild(staticSpan);
                         }
                     } else {
                         const staticSpan = document.createElement('span');
                         staticSpan.className = 'output-static output-bold';
                         staticSpan.textContent = part;
-                        lineDiv.appendChild(staticSpan);
+                        lineElement.appendChild(staticSpan);
                     }
                 });
 
@@ -399,19 +404,19 @@ function updateOutput() {
                         const dynamicSpan = document.createElement('span');
                         dynamicSpan.className = 'output-dynamic';
                         dynamicSpan.textContent = dynamic;
-                        lineDiv.appendChild(dynamicSpan);
+                        lineElement.appendChild(dynamicSpan);
 
                         if (rest.join('###ENDDYNAMIC###')) {
                             const staticSpan = document.createElement('span');
                             staticSpan.className = 'output-static';
                             staticSpan.textContent = rest.join('###ENDDYNAMIC###');
-                            lineDiv.appendChild(staticSpan);
+                            lineElement.appendChild(staticSpan);
                         }
                     } else {
                         const staticSpan = document.createElement('span');
                         staticSpan.className = 'output-static';
                         staticSpan.textContent = part;
-                        lineDiv.appendChild(staticSpan);
+                        lineElement.appendChild(staticSpan);
                     }
                 });
             } else {
@@ -423,25 +428,25 @@ function updateOutput() {
                         const dynamicSpan = document.createElement('span');
                         dynamicSpan.className = 'output-dynamic';
                         dynamicSpan.textContent = dynamic;
-                        lineDiv.appendChild(dynamicSpan);
+                        lineElement.appendChild(dynamicSpan);
 
                         if (rest.join('###ENDDYNAMIC###')) {
                             const staticSpan = document.createElement('span');
                             staticSpan.className = 'output-static';
                             staticSpan.textContent = rest.join('###ENDDYNAMIC###');
-                            lineDiv.appendChild(staticSpan);
+                            lineElement.appendChild(staticSpan);
                         }
                     } else {
                         const staticSpan = document.createElement('span');
                         staticSpan.className = 'output-static';
                         staticSpan.textContent = part;
-                        lineDiv.appendChild(staticSpan);
+                        lineElement.appendChild(staticSpan);
                     }
                 });
             }
         }
 
-        outputContainer.appendChild(lineDiv);
+        outputContainer.appendChild(lineElement);
     });
 }
 
@@ -502,40 +507,78 @@ document.getElementById('copyBtn').addEventListener('click', () => {
     tempDiv.style.fontSize = '14px';
 
     // Clone the output and process it for clipboard
-    Array.from(outputContainer.children).forEach(lineDiv => {
-        const lineCopy = document.createElement('div');
+    Array.from(outputContainer.children).forEach(element => {
+        // Check if this is a list item
+        if (element.tagName === 'LI') {
+            const liCopy = document.createElement('li');
+            
+            Array.from(element.childNodes).forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    liCopy.appendChild(document.createTextNode(node.textContent));
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    const isBold = node.classList.contains('output-bold');
+                    const isItalic = node.classList.contains('output-static');
 
-        Array.from(lineDiv.childNodes).forEach(node => {
-            if (node.nodeType === Node.TEXT_NODE) {
-                lineCopy.appendChild(document.createTextNode(node.textContent));
-            } else if (node.nodeType === Node.ELEMENT_NODE) {
-                const isBold = node.classList.contains('output-bold');
-                const isItalic = node.classList.contains('output-static');
+                    let textElement = document.createTextNode(node.textContent);
+                    let wrapper = liCopy;
 
-                let element = document.createTextNode(node.textContent);
-                let wrapper = lineCopy;
-
-                if (isBold && isItalic) {
-                    const bold = document.createElement('strong');
-                    const italic = document.createElement('em');
-                    italic.textContent = node.textContent;
-                    bold.appendChild(italic);
-                    wrapper.appendChild(bold);
-                } else if (isBold) {
-                    const bold = document.createElement('strong');
-                    bold.textContent = node.textContent;
-                    wrapper.appendChild(bold);
-                } else if (isItalic) {
-                    const italic = document.createElement('em');
-                    italic.textContent = node.textContent;
-                    wrapper.appendChild(italic);
-                } else {
-                    wrapper.appendChild(element);
+                    if (isBold && isItalic) {
+                        const bold = document.createElement('strong');
+                        const italic = document.createElement('em');
+                        italic.textContent = node.textContent;
+                        bold.appendChild(italic);
+                        wrapper.appendChild(bold);
+                    } else if (isBold) {
+                        const bold = document.createElement('strong');
+                        bold.textContent = node.textContent;
+                        wrapper.appendChild(bold);
+                    } else if (isItalic) {
+                        const italic = document.createElement('em');
+                        italic.textContent = node.textContent;
+                        wrapper.appendChild(italic);
+                    } else {
+                        wrapper.appendChild(textElement);
+                    }
                 }
-            }
-        });
+            });
+            
+            tempDiv.appendChild(liCopy);
+        } else {
+            // Handle div elements (non-list items)
+            const lineCopy = document.createElement('div');
 
-        tempDiv.appendChild(lineCopy);
+            Array.from(element.childNodes).forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    lineCopy.appendChild(document.createTextNode(node.textContent));
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    const isBold = node.classList.contains('output-bold');
+                    const isItalic = node.classList.contains('output-static');
+
+                    let textElement = document.createTextNode(node.textContent);
+                    let wrapper = lineCopy;
+
+                    if (isBold && isItalic) {
+                        const bold = document.createElement('strong');
+                        const italic = document.createElement('em');
+                        italic.textContent = node.textContent;
+                        bold.appendChild(italic);
+                        wrapper.appendChild(bold);
+                    } else if (isBold) {
+                        const bold = document.createElement('strong');
+                        bold.textContent = node.textContent;
+                        wrapper.appendChild(bold);
+                    } else if (isItalic) {
+                        const italic = document.createElement('em');
+                        italic.textContent = node.textContent;
+                        wrapper.appendChild(italic);
+                    } else {
+                        wrapper.appendChild(textElement);
+                    }
+                }
+            });
+
+            tempDiv.appendChild(lineCopy);
+        }
     });
 
     // Copy both HTML and plain text to clipboard

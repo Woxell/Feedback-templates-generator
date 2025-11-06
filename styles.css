@@ -154,6 +154,16 @@ textarea:focus {
     -ms-user-select: none;
     user-select: none;
     margin-bottom: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.output-container li {
+    margin-left: 2rem;
+    margin-bottom: 0.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .output-bold {
