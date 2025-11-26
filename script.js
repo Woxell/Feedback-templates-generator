@@ -58,11 +58,16 @@ const translations = {
 const templates = {
     en: {
         resubmission: {
+            prefix: {
+                default: `Assessment: Written Resubmission
+Deadline for resubmission: {deadline}`,
+                codeOrDiagram: `Assessment: Written Resubmission
+Deadline for resubmission: {deadline} (THIS DEADLINE PERTAINS TO THE CODE/DIAGRAM)`,
+                report: `Assessment: Written Resubmission
+Deadline for resubmission: {deadline} (THIS DEADLINE PERTAINS TO THE REPORT)`
+            },
             text:
-                `Assessment: Written Resubmission
-Deadline for resubmission: {deadline}
-
-To achieve a passing grade, you need to submit a resubmission that includes: 
+                `To achieve a passing grade, you need to submit a resubmission that includes: 
 All files that are part of the assignment must be resubmitted together in the same submission (even if only one file has been changed or supplemented).
 
 {codeComments}
@@ -113,11 +118,16 @@ It is important to come well prepared for the oral presentation. This does not o
     },
     sv: {
         resubmission: {
+            prefix: {
+                default: `Bedömning: Skriftlig komplettering
+Deadline för komplettering: {deadline}`,
+                codeOrDiagram: `Bedömning: Skriftlig komplettering
+Deadline för komplettering: {deadline} (DENNA DEADLINE AVSER KOD/DIAGRAM)`,
+                report: `Bedömning: Skriftlig komplettering
+Deadline för komplettering: {deadline} (DENNA DEADLINE AVSER RAPPORTEN)`
+            },
             text:
-                `Bedömning: Skriftlig komplettering
-Deadline för komplettering: {deadline}
-
-För godkänt betyg behöver du lämna in en komplettering innehållande:
+                `För godkänt betyg behöver du lämna in en komplettering innehållande:
 Alla filer som ingår i inlämningsuppgiften måste lämnas in igen på samma inlämning (även om det endast är komplettering i en av filerna).
 
 {codeComments}
@@ -312,6 +322,31 @@ function updateOutput() {
     const template = templates[lang][cat];
 
     let output = template.text;
+
+    // For resubmission templates, prepend the appropriate prefix
+    if (cat === 'resubmission' && template.prefix) {
+        // Determine which fields have content
+        const codeInput = document.getElementById('codeComments');
+        const diagramInput = document.getElementById('diagramComments');
+        const reportInput = document.getElementById('reportComments');
+
+        const hasCode = codeInput && codeInput.value.trim() !== '';
+        const hasDiagram = diagramInput && diagramInput.value.trim() !== '';
+        const hasReport = reportInput && reportInput.value.trim() !== '';
+
+        // Determine which prefix to use
+        let prefixType = 'default';
+        if ((hasCode || hasDiagram) && !hasReport) {
+            // Case 1: Only code/diagram
+            prefixType = 'codeOrDiagram';
+        } else if (hasReport && !hasCode && !hasDiagram) {
+            // Case 2: Only report
+            prefixType = 'report';
+        }
+        // Case 3: All other cases (including all fields filled) use default
+
+        output = template.prefix[prefixType] + '\n\n' + output;
+    }
 
     template.fields.forEach(field => {
         const input = document.getElementById(field.id);
@@ -511,7 +546,7 @@ document.getElementById('copyBtn').addEventListener('click', () => {
         // Check if this is a list item
         if (element.tagName === 'LI') {
             const liCopy = document.createElement('li');
-            
+
             Array.from(element.childNodes).forEach(node => {
                 if (node.nodeType === Node.TEXT_NODE) {
                     liCopy.appendChild(document.createTextNode(node.textContent));
@@ -541,7 +576,7 @@ document.getElementById('copyBtn').addEventListener('click', () => {
                     }
                 }
             });
-            
+
             tempDiv.appendChild(liCopy);
         } else {
             // Handle div elements (non-list items)
