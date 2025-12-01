@@ -58,16 +58,20 @@ const translations = {
 const templates = {
     en: {
         resubmission: {
-            prefix: {
-                default: `Assessment: Written Resubmission
-Deadline for resubmission: {deadline}`,
-                codeOrDiagram: `Assessment: Written Resubmission
-Deadline for resubmission: {deadline} (THIS DEADLINE PERTAINS TO THE CODE/DIAGRAM)`,
-                report: `Assessment: Written Resubmission
-Deadline for resubmission: {deadline} (THIS DEADLINE PERTAINS TO THE REPORT)`
+            prefixOptions: {
+                code: 'CODE',
+                diagram: 'DIAGRAM',
+                report: 'REPORT',
+                codeAndDiagram: 'CODE AND DIAGRAM',
+                codeAndReport: 'CODE AND REPORT',
+                diagramAndReport: 'DIAGRAM AND REPORT',
+                default: null
             },
             text:
-                `To achieve a passing grade, you need to submit a resubmission that includes: 
+                `Assessment: Written Resubmission
+Deadline for resubmission: {deadline}{prefixSuffix}
+
+To achieve a passing grade, you need to submit a resubmission that includes: 
 All files that are part of the assignment must be resubmitted together in the same submission (even if only one file has been changed or supplemented).
 
 {codeComments}
@@ -118,16 +122,20 @@ It is important to come well prepared for the oral presentation. This does not o
     },
     sv: {
         resubmission: {
-            prefix: {
-                default: `Bedömning: Skriftlig komplettering
-Deadline för komplettering: {deadline}`,
-                codeOrDiagram: `Bedömning: Skriftlig komplettering
-Deadline för komplettering: {deadline} (DENNA DEADLINE AVSER KOD/DIAGRAM)`,
-                report: `Bedömning: Skriftlig komplettering
-Deadline för komplettering: {deadline} (DENNA DEADLINE AVSER RAPPORTEN)`
+            prefixOptions: {
+                code: 'KOD',
+                diagram: 'DIAGRAM',
+                report: 'RAPPORTEN',
+                codeAndDiagram: 'KOD OCH DIAGRAM',
+                codeAndReport: 'KOD OCH RAPPORTEN',
+                diagramAndReport: 'DIAGRAM OCH RAPPORTEN',
+                default: null
             },
             text:
-                `För godkänt betyg behöver du lämna in en komplettering innehållande:
+                `Bedömning: Skriftlig komplettering
+Deadline för komplettering: {deadline}{prefixSuffix}
+
+För godkänt betyg behöver du lämna in en komplettering innehållande:
 Alla filer som ingår i inlämningsuppgiften måste lämnas in igen på samma inlämning (även om det endast är komplettering i en av filerna).
 
 {codeComments}
@@ -323,8 +331,8 @@ function updateOutput() {
 
     let output = template.text;
 
-    // For resubmission templates, prepend the appropriate prefix
-    if (cat === 'resubmission' && template.prefix) {
+    // For resubmission templates, determine the appropriate prefix suffix
+    if (cat === 'resubmission' && template.prefixOptions) {
         // Determine which fields have content
         const codeInput = document.getElementById('codeComments');
         const diagramInput = document.getElementById('diagramComments');
@@ -334,18 +342,29 @@ function updateOutput() {
         const hasDiagram = diagramInput && diagramInput.value.trim() !== '';
         const hasReport = reportInput && reportInput.value.trim() !== '';
 
-        // Determine which prefix to use
-        let prefixType = 'default';
-        if ((hasCode || hasDiagram) && !hasReport) {
-            // Case 1: Only code/diagram
-            prefixType = 'codeOrDiagram';
-        } else if (hasReport && !hasCode && !hasDiagram) {
-            // Case 2: Only report
-            prefixType = 'report';
+        // Determine which prefix to use based on field combinations
+        let prefixKey = 'default';
+        if (hasCode && !hasDiagram && !hasReport) {
+            prefixKey = 'code';
+        } else if (!hasCode && hasDiagram && !hasReport) {
+            prefixKey = 'diagram';
+        } else if (!hasCode && !hasDiagram && hasReport) {
+            prefixKey = 'report';
+        } else if (hasCode && hasDiagram && !hasReport) {
+            prefixKey = 'codeAndDiagram';
+        } else if (hasCode && !hasDiagram && hasReport) {
+            prefixKey = 'codeAndReport';
+        } else if (!hasCode && hasDiagram && hasReport) {
+            prefixKey = 'diagramAndReport';
         }
-        // Case 3: All other cases (including all fields filled) use default
+        // All three filled or none filled = default (no suffix)
 
-        output = template.prefix[prefixType] + '\n\n' + output;
+        const prefixValue = template.prefixOptions[prefixKey];
+        const prefixSuffix = prefixValue
+            ? ` (${lang === 'en' ? 'THIS DEADLINE PERTAINS TO THE ' : 'DENNA DEADLINE AVSER '}${prefixValue})`
+            : '';
+
+        output = output.replace('{prefixSuffix}', prefixSuffix);
     }
 
     template.fields.forEach(field => {
